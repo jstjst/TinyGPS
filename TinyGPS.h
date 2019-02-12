@@ -61,8 +61,8 @@ public:
   // (note: versions 12 and earlier gave lat/long in 100,000ths of a degree.
   void get_position(long *latitude, long *longitude, unsigned long *fix_age = 0);
 
-  // lat/long in NMEA Raw format plus N/S and E/S addes to the end of lat/long
-  void get_raw_position(char latitude[15], char longitude[15], unsigned long *fix_age = 0);
+  // lat/long in ddmm.mm format plus N/S and E/S added to the end of lat/long
+  void get_raw_position(char latitude[9], char longitude[10], unsigned long *fix_age = 0);
 
   // date as ddmmyy, time as hhmmsscc, and age in milliseconds
   void get_datetime(unsigned long *date, unsigned long *time, unsigned long *age = 0);
@@ -110,8 +110,8 @@ private:
   unsigned long _date, _new_date;
   long _latitude, _new_latitude;
   long _longitude, _new_longitude;
-  char _raw_latitude[15], _new_raw_latitude[15];
-  char _raw_longitude[15], _new_raw_longitude[15];
+  char _raw_latitude[9], _new_raw_latitude[9];
+  char _raw_longitude[10], _new_raw_longitude[10];
   long _altitude, _new_altitude;
   unsigned long  _speed, _new_speed;
   unsigned long  _course, _new_course;

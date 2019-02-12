@@ -183,16 +183,16 @@ bool TinyGPS::term_complete()
         case _GPS_SENTENCE_GPRMC:
           _time      = _new_time;
           _date      = _new_date;
-          _latitude  = _new_latitude;     strlcpy(_raw_latitude, _new_raw_latitude, 15-1);
-          _longitude = _new_longitude;    strlcpy(_raw_longitude, _new_raw_longitude, 15-1);
+          _latitude  = _new_latitude;     strlcpy(_raw_latitude, _new_raw_latitude, 8+1);
+          _longitude = _new_longitude;    strlcpy(_raw_longitude, _new_raw_longitude, 9+1);
           _speed     = _new_speed;
           _course    = _new_course;
           break;
         case _GPS_SENTENCE_GPGGA:
           _altitude  = _new_altitude;
           _time      = _new_time;
-          _latitude  = _new_latitude;     strlcpy(_raw_latitude, _new_raw_latitude, 15-1);
-          _longitude = _new_longitude;    strlcpy(_raw_longitude, _new_raw_longitude, 15-1);
+          _latitude  = _new_latitude;     strlcpy(_raw_latitude, _new_raw_latitude, 8+1);
+          _longitude = _new_longitude;    strlcpy(_raw_longitude, _new_raw_longitude, 9+1);
           _numsats   = _new_numsats;
           _hdop      = _new_hdop;
           break;
@@ -234,24 +234,24 @@ bool TinyGPS::term_complete()
       break;
     case COMBINE(_GPS_SENTENCE_GPRMC, 3): // Latitude
     case COMBINE(_GPS_SENTENCE_GPGGA, 2):
-      strlcpy(_new_raw_latitude, _term, strlen(_term)+1);
+      strlcpy(_new_raw_latitude, _term, 7+1);
       _new_latitude = parse_degrees();
       _new_position_fix = millis();
       break;
     case COMBINE(_GPS_SENTENCE_GPRMC, 4): // N/S
     case COMBINE(_GPS_SENTENCE_GPGGA, 3):
-      strlcat(_new_raw_latitude, _term, strlen(_new_raw_latitude)+2);
+      strlcat(_new_raw_latitude, _term, 8+1);
       if (_term[0] == 'S')
         _new_latitude = -_new_latitude;
       break;
     case COMBINE(_GPS_SENTENCE_GPRMC, 5): // Longitude
     case COMBINE(_GPS_SENTENCE_GPGGA, 4):
-      strlcpy(_new_raw_longitude, _term, strlen(_term)+1);
+      strlcpy(_new_raw_longitude, _term, 8+1);
       _new_longitude = parse_degrees();
       break;
     case COMBINE(_GPS_SENTENCE_GPRMC, 6): // E/W
     case COMBINE(_GPS_SENTENCE_GPGGA, 5):
-      strlcat(_new_raw_longitude, _term, strlen(_new_raw_longitude)+2);
+      strlcat(_new_raw_longitude, _term, 9+1);
       if (_term[0] == 'W')
         _new_longitude = -_new_longitude;
       break;
@@ -360,11 +360,11 @@ void TinyGPS::get_position(long *latitude, long *longitude, unsigned long *fix_a
    GPS_INVALID_AGE : millis() - _last_position_fix;
 }
 
-// lat/long in NMEA Raw format plus N/S and E/S addes to the end of lat/long
-void TinyGPS::get_raw_position(char latitude[15], char longitude[15], unsigned long *fix_age)
+// lat/long in ddmm.mm format plus N/S and E/S added to the end of lat/long
+void TinyGPS::get_raw_position(char latitude[9], char longitude[10], unsigned long *fix_age)
 {
-  if(latitude) strlcpy(latitude, _raw_latitude, 15-1);
-  if(longitude) strlcpy(longitude, _raw_longitude, 15-1);
+  if(latitude) strlcpy(latitude, _raw_latitude, 8+1);
+  if(longitude) strlcpy(longitude, _raw_longitude, 9+1);
   if (fix_age) *fix_age = _last_position_fix == GPS_INVALID_FIX_TIME ?
    GPS_INVALID_AGE : millis() - _last_position_fix;
 }
